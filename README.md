@@ -7,11 +7,13 @@ Using MongoDB, Node.js, Express.js and Bootstrap.
 Mongo, Node and npm needs to be preinstalled
 
 # Setup
-
+```
 git clone https://github.com/leanware/lwrekry.git
-
+```
+```
 npm install
-
+```
 # Start
-
+```
 npm start
+```
