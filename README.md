@@ -2,18 +2,18 @@
 An image gallery application for storing, viewing and commenting images. 
 Using MongoDB, Node.js, Express.js and Bootstrap. 
 
-# Requirements
+## Requirements
 
 Mongo, Node and npm needs to be preinstalled
 
-# Setup
+## Setup
 ```
 git clone https://github.com/leanware/lwrekry.git
 ```
 ```
 npm install
 ```
-# Start
+## Start
 ```
 npm start
 ```
