@@ -53,18 +53,14 @@ router.get("/:id", function(req, res){
 });
 
 // Edit image route
-router.get("/:id/edit", function(req, res) {
+router.get("/:id/edit", checkImageOwnership, function(req, res) {
     Image.findById(req.params.id, function(err, foundImage){
-        if(err){
-            res.redirect("/images");
-        } else {
-            res.render("images/edit", {image: foundImage});
-        }
+        res.render("images/edit", {image: foundImage});
     });
 });
 
 // Update image route
-router.put("/:id", function(req, res){
+router.put("/:id", checkImageOwnership, function(req, res){
     Image.findByIdAndUpdate(req.params.id, req.body.image, function(err, updatedImage){
        if(err){
            res.redirect("/images");
@@ -75,7 +71,7 @@ router.put("/:id", function(req, res){
 });
 
 // Destroy image route
-router.delete("/:id", function(req, res){
+router.delete("/:id", checkImageOwnership, function(req, res){
     Image.findByIdAndRemove(req.params.id, function(err){
        if(err){
            res.redirect("/images");
@@ -91,6 +87,26 @@ function isLoggedIn(req, res, next){
         return next();
     }
     res.redirect("/login");
+}
+
+function checkImageOwnership(req, res, next){
+     if(req.isAuthenticated()){
+        Image.findById(req.params.id, function(err, foundImage){
+            if(err){
+                res.redirect("/images");
+            } else {
+                // foundImage.author.id is an object
+                // req.user._id is a string --> cannot compare with == or ===
+                if(foundImage.author.id.equals(req.user._id)){
+                    next();
+                } else {
+                    res.redirect("back");
+                }
+            }
+        });
+    } else {
+        res.redirect("back");
+    }
 }
 
 module.exports = router;

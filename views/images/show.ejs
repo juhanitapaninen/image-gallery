@@ -19,10 +19,12 @@
                         <em>Submitted By <%= image.author.username %></em>
                     </p>
                 </div>
-                <a class="btn btn-warning" href="/images/<%= image._id %>/edit">Edit</a>
-                <form id="delete-form" action="/images/<%= image._id %>?_method=DELETE" method="POST">
-                    <button class="btn btn-danger">delete</button>
-                </form>
+                <% if(currentUser && image.author.id.equals(currentUser._id)){ %>
+                    <a class="btn btn-warning" href="/images/<%= image._id %>/edit">Edit</a>
+                    <form id="delete-form" action="/images/<%= image._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-danger">delete</button>
+                    </form>
+                <% } %>
             </div>
             <div class="well">
                 <div class="text-right">
