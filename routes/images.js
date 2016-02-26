@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var Image = require("../models/image");
+var middleware = require("../middleware");
 
 // Index - Show all images
 router.get("/", function(req, res) {
@@ -15,12 +16,12 @@ router.get("/", function(req, res) {
 });
 
 // Show new form
-router.get("/new", isLoggedIn, function(req, res){
+router.get("/new", middleware.isLoggedIn, function(req, res){
    res.render("images/new");
 });
 
 // Add to db
-router.post("/", isLoggedIn, function(req, res) {
+router.post("/", middleware.isLoggedIn, function(req, res) {
     var name = req.body.name;
     var image = req.body.image;
     var desc = req.body.description;
@@ -46,21 +47,20 @@ router.get("/:id", function(req, res){
         if(err){
             console.log(err);
         } else {
-            console.log(foundimage);
             res.render("images/show", {image: foundimage});
         }
     });
 });
 
 // Edit image route
-router.get("/:id/edit", checkImageOwnership, function(req, res) {
+router.get("/:id/edit", middleware.checkImageOwnership, function(req, res) {
     Image.findById(req.params.id, function(err, foundImage){
         res.render("images/edit", {image: foundImage});
     });
 });
 
 // Update image route
-router.put("/:id", checkImageOwnership, function(req, res){
+router.put("/:id", middleware.checkImageOwnership, function(req, res){
     Image.findByIdAndUpdate(req.params.id, req.body.image, function(err, updatedImage){
        if(err){
            res.redirect("/images");
@@ -71,7 +71,7 @@ router.put("/:id", checkImageOwnership, function(req, res){
 });
 
 // Destroy image route
-router.delete("/:id", checkImageOwnership, function(req, res){
+router.delete("/:id", middleware.checkImageOwnership, function(req, res){
     Image.findByIdAndRemove(req.params.id, function(err){
        if(err){
            res.redirect("/images");
@@ -80,33 +80,5 @@ router.delete("/:id", checkImageOwnership, function(req, res){
        }
     });
 });
-
-// Middleware
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
-
-function checkImageOwnership(req, res, next){
-     if(req.isAuthenticated()){
-        Image.findById(req.params.id, function(err, foundImage){
-            if(err){
-                res.redirect("/images");
-            } else {
-                // foundImage.author.id is an object
-                // req.user._id is a string --> cannot compare with == or ===
-                if(foundImage.author.id.equals(req.user._id)){
-                    next();
-                } else {
-                    res.redirect("back");
-                }
-            }
-        });
-    } else {
-        res.redirect("back");
-    }
-}
 
 module.exports = router;
