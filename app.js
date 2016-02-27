@@ -5,6 +5,7 @@ var express         = require("express"),
     passport        = require("passport"),
     LocalStrategy   = require("passport-local"),
     methodOverride  = require("method-override"),
+    flash           = require("connect-flash"),
     Image           = require("./models/image"),
     Comment         = require("./models/comment"),
     User            = require("./models/user"),
@@ -20,6 +21,7 @@ app.set("view engine", "ejs");
 mongoose.connect("mongodb://localhost/image_gallery");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
+app.use(flash());
 // seedDB(); // seed the database 
 
 // Passport config
@@ -37,6 +39,8 @@ passport.deserializeUser(User.deserializeUser());
 // Pass currentUser to every template
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
     next();
 });
 

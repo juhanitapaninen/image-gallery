@@ -55,7 +55,11 @@ router.get("/:id", function(req, res){
 // Edit image route
 router.get("/:id/edit", middleware.checkImageOwnership, function(req, res) {
     Image.findById(req.params.id, function(err, foundImage){
-        res.render("images/edit", {image: foundImage});
+        if(err){
+            req.flash("error", "Image not found");
+        } else {
+            res.render("images/edit", {image: foundImage});
+        }
     });
 });
 
