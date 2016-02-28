@@ -9,6 +9,7 @@ router.get("/", function(req, res) {
     Image.find({}, function(err, images){
         if(err){
             console.log(err);
+            return res.redirect("back");
         } else {
             res.render("images/index", {images:images}); 
         }
@@ -34,8 +35,10 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
     Image.create(newimage, function(err, newlyCreated){
         if(err){
             console.log(err);
+            req.flash("error", "Error in creating image");
+            return res.redirect("back");
         } else {
-            console.log(newlyCreated);
+            req.flash("success", "Succesfylly added image " + newlyCreated.name);
             res.redirect("images");
         }
     });
@@ -46,6 +49,8 @@ router.get("/:id", function(req, res){
     Image.findById(req.params.id).populate("comments").exec(function(err, foundimage){
         if(err){
             console.log(err);
+            req.flash("error", "Image not found");
+            return res.redirect("back");
         } else {
             res.render("images/show", {image: foundimage});
         }
@@ -57,6 +62,7 @@ router.get("/:id/edit", middleware.checkImageOwnership, function(req, res) {
     Image.findById(req.params.id, function(err, foundImage){
         if(err){
             req.flash("error", "Image not found");
+            return res.redirect("back");
         } else {
             res.render("images/edit", {image: foundImage});
         }
@@ -67,8 +73,10 @@ router.get("/:id/edit", middleware.checkImageOwnership, function(req, res) {
 router.put("/:id", middleware.checkImageOwnership, function(req, res){
     Image.findByIdAndUpdate(req.params.id, req.body.image, function(err, updatedImage){
        if(err){
+           req.flash("error", "Image not found");
            res.redirect("/images");
        } else {
+           req.flash("success", "Succesfylly edited image");
            res.redirect("/images/" + req.params.id);
        }
     });
@@ -78,8 +86,10 @@ router.put("/:id", middleware.checkImageOwnership, function(req, res){
 router.delete("/:id", middleware.checkImageOwnership, function(req, res){
     Image.findByIdAndRemove(req.params.id, function(err){
        if(err){
+           req.flash("error", "Image not found");
            res.redirect("/images");
        } else {
+            req.flash("success", "Image deleted");
            res.redirect("/images");
        }
     });
