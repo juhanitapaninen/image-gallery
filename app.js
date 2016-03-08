@@ -12,9 +12,10 @@ var express         = require("express"),
     seedDB          = require("./seeds")
 
 // Requiring routes
-var imageRoutes    = require("./routes/images"),
-    commentRoutes       = require("./routes/comments"),
-    indexRoutes         = require("./routes/index")
+var projectRoutes   = require("./routes/projects"),
+    imageRoutes     = require("./routes/images"),
+    commentRoutes   = require("./routes/comments"),
+    indexRoutes     = require("./routes/index")
     
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
@@ -45,6 +46,7 @@ app.use(function(req, res, next){
 });
 
 app.use("/", indexRoutes);
+app.use("/projects", projectRoutes);
 app.use("/images", imageRoutes);
 app.use("/images/:id/comments", commentRoutes);
 
