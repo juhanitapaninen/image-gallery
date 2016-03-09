@@ -44,6 +44,13 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
     });
 });
 
+// Add to db
+router.post("/file-upload", middleware.isLoggedIn, function(req, res) {
+    console.log('FILE UPLOAD!');
+
+    res.redirect("back");
+});
+
 // Show more info about one item
 router.get("/:id", function(req, res){
     Image.findById(req.params.id).populate("comments").exec(function(err, foundimage){
