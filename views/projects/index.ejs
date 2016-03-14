@@ -2,7 +2,7 @@
 
 <div class="container">
 
-    <!--<header class="jumbotron">
+    <header class="jumbotron">
         <div class="container">
             
             <p>This page shows all the high-level projects</p>
@@ -10,29 +10,25 @@
                 <a class="btn btn-primary btn-large" href="/projects/new">Add New Project</a>
             </p>
         </div>
-    </header>-->
+    </header>
 
     <div class="row">
-        <img src="https://cloud.githubusercontent.com/assets/10463362/6169052/aa784708-b2c2-11e4-8b9d-63a0213b69c8.png">This page is under construction</img>
         <p>Here you will view, create and delete folders which will contain the images. </p>
     </div>
     <div class="row text-center" style="display:flex; flex-wrap: wrap;">
         <% projects.forEach(function(project){ %>
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="thumbnail">
-                    <img src="<%= project.project %>">
+                    <img src="<%= project.image %>">
                     <div class="caption">
                         <h4><%= project.name %></h4>
                     </div>
                     <p>
-                        <a class="btn btn-primary" href="/project/<%= project.id %>">More info</a>
+                        <a class="btn btn-primary" href="/projects/<%= project.id %>">More info</a>
                     </p>
                 </div>
             </div>
         <% }); %>
-    </div>
-    <div style="min-width:200px; width: 30%; margin: 25px auto;">
-        <form action="/images/file-upload" class="dropzone" id="my-awesome-dropzone"></form>
     </div>
 </div>
 

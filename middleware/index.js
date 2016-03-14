@@ -1,5 +1,6 @@
 var Image = require("../models/image");
 var Comment = require("../models/comment");
+var Project = require("../models/project");
 
 var middlewareObj = {};
 
@@ -13,6 +14,29 @@ middlewareObj.checkImageOwnership = function checkImageOwnership(req, res, next)
                 // foundImage.author.id is an object
                 // req.user._id is a string --> cannot compare with == or ===
                 if(foundImage.author.id.equals(req.user._id)){
+                    next();
+                } else {
+                    req.flash("error", "You don't have permission to do that!");
+                    res.redirect("back");
+                }
+            }
+        });
+    } else {
+        req.flash("error", "You must be logged in to do that");
+        res.redirect("back");
+    }
+}
+
+middlewareObj.checkProjectOwnership = function checkProjectOwnership(req, res, next){
+    if(req.isAuthenticated()){
+        Project.findById(req.params.id, function(err, foundProject){
+            if(err){
+                req.flash("error", "Project not found");
+                res.redirect("/projects");
+            } else {
+                // foundImage.author.id is an object
+                // req.user._id is a string --> cannot compare with == or ===
+                if(foundProject.author.id.equals(req.user._id)){
                     next();
                 } else {
                     req.flash("error", "You don't have permission to do that!");
