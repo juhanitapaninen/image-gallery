@@ -2,6 +2,8 @@ var express = require("express");
 var router = express.Router();
 var Project = require("../models/project");
 var middleware = require("../middleware");
+var multer  = require('multer');
+var upload = multer({ dest: 'uploads/' });
 
 // Index - Show all projects
 router.get("/", function(req, res) {
@@ -76,8 +78,9 @@ router.put("/:id", middleware.checkProjectOwnership, function(req, res){
 });
 
 // Add to db
-router.post("/:id/file-upload", middleware.isLoggedIn, function(req, res) {
+router.post("/:id/file-upload", middleware.isLoggedIn, upload.array('file', 12), function(req, res) {
     console.log('FILE UPLOAD! id: ' + req.params.id);
+    console.log('Files: ' + req.files);
 
     res.redirect("back");
 });
