@@ -69,11 +69,17 @@ router.get("/:id/edit", middleware.checkProjectOwnership, function(req, res) {
     });
 });
 
-// Update image route
+// Update project route
 router.put("/:id", middleware.checkProjectOwnership, function(req, res){
     req.flash("error", "Not yet implemented");
     res.redirect("/images");
 });
 
+// Add to db
+router.post("/:id/file-upload", middleware.isLoggedIn, function(req, res) {
+    console.log('FILE UPLOAD! id: ' + req.params.id);
+
+    res.redirect("back");
+});
 
 module.exports = router;

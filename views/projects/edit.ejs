@@ -3,25 +3,34 @@
 <div class="container">
     <div class="row">
         <h1 style="text-align: center;">Edit <%= project.name %></h1>
-        <div style="min-width:200px; width: 30%; margin: 25px auto;">
-            <form action="/projects/<%= project._id %>?_method=PUT" method="POST">
-                <div class="form-group">
-                    <input class="form-control" type="text" name="project[name]" value="<%= project.name %>">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="project[image]" value="<%= project.image %>">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="project[description]" value="<%= project.description %>">
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-lg btn-primary btn-block">Submit!</button>
-                </div>
-            </form>
-            <h2 style="text-align: center;">Add images</h1>
             <div style="min-width:200px; width: 30%; margin: 25px auto;">
-                <form action="/images/file-upload" class="dropzone" id="my-awesome-dropzone"></form>
-            </div>
+            <ul class="nav nav-tabs nav-justified">
+                <li role="presentation" class="active"><a href="#edit" data-toggle="tab">Edit basic information</a></li>
+                <li role="presentation"><a href="#addImages" data-toggle="tab">Add images</a></li>
+            </ul>
+            <div class="tab-content clearfix">
+                <div class="tab-pane active" id="edit">
+                    <form action="/projects/<%= project._id %>?_method=PUT" method="POST">
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="project[name]" value="<%= project.name %>">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="project[image]" value="<%= project.image %>">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="project[description]" value="<%= project.description %>">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-lg btn-primary btn-block">Submit!</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane" id="addImages">
+                    <div style="min-width:200px; width: 30%; margin: 25px auto;">
+                        <form action="/projects/<%= project._id %>/file-upload" class="dropzone" id="my-awesome-dropzone"></form>
+                    </div>
+        		</div>
+    		</div>
             <a href="/images">Go Back</a>
         </div>
     </div>
