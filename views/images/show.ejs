@@ -11,7 +11,11 @@
         </div>
         <div class="col-md-9">
             <div class="thumbnail">
-                <img class="img-responsive" src="<%= image.image %>">
+                <% if(image.imageData.data) { %>
+                    <img class="img-responsive" src="data:<%= image.imageData.contentType %>;base64,<%= image.imageData.data.toString('base64') %>">
+                <% } else { %>
+                    <img class="img-responsive" src="<%= image.image %>">
+                <% } %>
                 <div class="caption-full">
                     <h4><a><%= image.name %></a></h4>
                     <p><%= image.description %></p>

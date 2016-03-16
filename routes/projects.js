@@ -1,7 +1,9 @@
 var express = require("express");
 var router = express.Router();
 var Project = require("../models/project");
+var Image = require("../models/image");
 var middleware = require("../middleware");
+var fs = require('fs');
 var multer  = require('multer');
 var upload = multer({ dest: 'uploads/' });
 
@@ -78,11 +80,32 @@ router.put("/:id", middleware.checkProjectOwnership, function(req, res){
 });
 
 // Add to db
-router.post("/:id/file-upload", middleware.isLoggedIn, upload.array('file', 12), function(req, res) {
+router.post("/:id/file-upload", middleware.isLoggedIn, upload.single('file'), function(req, res) {
     console.log('FILE UPLOAD! id: ' + req.params.id);
-    console.log('Files: ' + req.files);
-
-    res.redirect("back");
+    console.log('File: ' + req.file.originalname);
+    console.log('File: ' + req.file.encoding);
+    console.log('File: ' + req.file.mimetype);
+    
+    var name = req.file.originalname;
+    var imageData = {
+        data: fs.readFileSync(req.file.path),
+        contentType: req.file.mimetype,
+    }  
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    }
+    var newimage = {name: name, imageData: imageData, author: author};
+    
+    Image.create(newimage, function(err, newlyCreated){
+        if(err){
+            console.log(err);
+            req.flash("error", "Error in creating image");
+            return res.redirect("back");
+        } else {
+            res.redirect("back");
+        }
+    });
 });
 
 module.exports = router;

@@ -19,7 +19,11 @@
         <% images.forEach(function(image){ %>
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="thumbnail">
-                    <img src="<%= image.image %>">
+                    <% if(image.imageData.data) { %>
+                        <img src="data:<%= image.imageData.contentType %>;base64,<%= image.imageData.data.toString('base64') %>">
+                    <% } else { %>
+                        <img src="<%= image.image %>">
+                    <% } %>
                     <div class="caption">
                         <h4><%= image.name %></h4>
                     </div>
