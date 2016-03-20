@@ -11,6 +11,12 @@ var projectSchema = new mongoose.Schema({
         }, 
         username: String
     }, 
+    images: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Image"
+        }
+    ],
     comments: [
         {
             type: mongoose.Schema.Types.ObjectId,

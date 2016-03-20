@@ -50,13 +50,22 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
 
 // Show more info about one item
 router.get("/:id", function(req, res){
-    Project.findById(req.params.id).populate("comments").exec(function(err, foundProject){
+    Project.findById(req.params.id).populate("images").populate("comments").exec(function(err, foundProject){
         if(err){
             console.log(err);
             req.flash("error", "Project not found");
             return res.redirect("back");
         } else {
             res.render("projects/show", {project: foundProject});
+            /*Image.find({}, function(err, images){
+                if(err){
+                    console.log(err);
+                    return res.redirect("back");
+                } else {
+                    res.render("projects/show", {project: foundProject, images:images});
+                    //res.render("images/index", {images:images}); 
+                }
+            });*/
         }
     });
 });
@@ -81,11 +90,7 @@ router.put("/:id", middleware.checkProjectOwnership, function(req, res){
 
 // Add to db
 router.post("/:id/file-upload", middleware.isLoggedIn, upload.single('file'), function(req, res) {
-    console.log('FILE UPLOAD! id: ' + req.params.id);
-    console.log('File: ' + req.file.originalname);
-    console.log('File: ' + req.file.encoding);
-    console.log('File: ' + req.file.mimetype);
-    
+
     var name = req.file.originalname;
     var imageData = {
         data: fs.readFileSync(req.file.path),
@@ -103,7 +108,19 @@ router.post("/:id/file-upload", middleware.isLoggedIn, upload.single('file'), fu
             req.flash("error", "Error in creating image");
             return res.redirect("back");
         } else {
-            res.redirect("back");
+            
+            Project.findById(req.params.id, function(err, project) {
+                if(err){
+                    console.log(err);
+                    req.flash("error", "Something went wrong");
+                    res.redirect("back");
+                } else {
+                    project.images.push(newlyCreated);
+                    project.save();
+                    req.flash("success", "Succesfully added image");
+                    res.redirect("back");
+                }
+            });
         }
     });
 });
