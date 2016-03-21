@@ -6,7 +6,7 @@ var middlewareObj = {};
 
 middlewareObj.checkImageOwnership = function checkImageOwnership(req, res, next){
     if(req.isAuthenticated()){
-        Image.findById(req.params.id, function(err, foundImage){
+        Image.findById(req.params.image_id, function(err, foundImage){
             if(err){
                 req.flash("error", "Image not found");
                 res.redirect("/images");

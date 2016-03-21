@@ -1,18 +1,18 @@
 <% include ../partials/header.ejs %>
 <div class="container">
     <div class="row">
-        <div class="col-md-3">
+<!--        <div class="col-md-3">
             <p class="lead">Image Gallery</p>
             <div class="list-group">
                 <li class="list-group-item active">Info 1</li>
                 <li class="list-group-item">Info 2</li>
                 <li class="list-group-item">Info 3</li>
             </div>
-        </div>
-        <div class="col-md-9">
-            <div class="thumbnail">
+        </div>-->
+        <div class="col-md-12">
+            <div>
                 <% if(image.imageData.data) { %>
-                    <img class="img-responsive" src="data:<%= image.imageData.contentType %>;base64,<%= image.imageData.data.toString('base64') %>">
+                    <img class="img-responsive img-rounded" src="data:<%= image.imageData.contentType %>;base64,<%= image.imageData.data.toString('base64') %>">
                 <% } else { %>
                     <img class="img-responsive" src="<%= image.image %>">
                 <% } %>
@@ -24,8 +24,8 @@
                     </p>
                 </div>
                 <% if(currentUser && image.author.id.equals(currentUser._id)){ %>
-                    <a class="btn btn-warning" href="/images/<%= image._id %>/edit">Edit</a>
-                    <form class="delete-form" action="/images/<%= image._id %>?_method=DELETE" method="POST">
+                    <a class="btn btn-warning" href="/projects/<%= project._id %>/images/<%= image._id %>/edit">Edit</a>
+                    <form class="delete-form" action="/projects/<%= project._id %>/images/<%= image._id %>?_method=DELETE" method="POST">
                         <button class="btn btn-danger">Delete</button>
                     </form>
                 <% } %>

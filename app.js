@@ -47,7 +47,7 @@ app.use(function(req, res, next){
 
 app.use("/", indexRoutes);
 app.use("/projects", projectRoutes);
-app.use("/images", imageRoutes);
+app.use("/projects/:id/images", imageRoutes);
 app.use("/images/:id/comments", commentRoutes);
 
 app.listen(process.env.PORT, process.env.IP, function(){

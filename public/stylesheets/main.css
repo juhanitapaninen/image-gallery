@@ -12,6 +12,11 @@
     padding: 9px;
 }
 
+.img-rounded {
+    max-height: 80vh;
+    margin: auto;
+}
+
 .delete-form {
     display: inline;
 }

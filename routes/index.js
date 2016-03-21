@@ -23,7 +23,7 @@ router.post("/register", function(req, res) {
        } else {
            passport.authenticate("local")(req, res, function(){
                req.flash("success", "Welcome to Image Gallery " + user.username);
-               res.redirect("/images");
+               res.redirect("/projects");
            });
        }
    });
@@ -37,7 +37,7 @@ router.get("/login", function(req, res) {
 // Handle login logic
 router.post("/login", passport.authenticate("local", 
     {
-        successRedirect: "/images",
+        successRedirect: "/projects",
         failureRedirect: "/login", 
         failureFlash: true, 
         successFlash: 'Welcome!'
@@ -48,7 +48,7 @@ router.post("/login", passport.authenticate("local",
 router.get("/logout", function(req, res) {
     req.logout();
     req.flash("success", "You logged out!");
-    res.redirect("/images");
+    res.redirect("/");
 });
 
 module.exports = router;
