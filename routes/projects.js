@@ -1,11 +1,15 @@
-var express = require("express");
-var router = express.Router();
-var Project = require("../models/project");
-var Image = require("../models/image");
-var middleware = require("../middleware");
-var fs = require('fs');
-var multer  = require('multer');
-var upload = multer({ dest: 'uploads/' });
+var express =       require("express");
+var router =        express.Router();
+var Project =       require("../models/project");
+var Image =         require("../models/image");
+var middleware =    require("../middleware");
+var fs =            require('fs');
+var lwip =          require('lwip');
+var multer  =       require('multer');
+var upload =        multer({ dest: 'uploads/' });
+
+var MAX_WIDHT = 1024;
+var MAX_HEIGHT = 768;
 
 // Index - Show all projects
 router.get("/", function(req, res) {
@@ -90,39 +94,47 @@ router.put("/:id", middleware.checkProjectOwnership, function(req, res){
 
 // Add to db
 router.post("/:id/file-upload", middleware.isLoggedIn, upload.single('file'), function(req, res) {
-
-    var name = req.file.originalname;
-    var imageData = {
-        data: fs.readFileSync(req.file.path),
-        contentType: req.file.mimetype,
-    }  
-    var author = {
-        id: req.user._id,
-        username: req.user.username
-    }
-    var newimage = {name: name, imageData: imageData, author: author};
-    
-    Image.create(newimage, function(err, newlyCreated){
-        if(err){
-            console.log(err);
-            req.flash("error", "Error in creating image");
-            return res.redirect("back");
-        } else {
-            
-            Project.findById(req.params.id, function(err, project) {
-                if(err){
-                    console.log(err);
-                    req.flash("error", "Something went wrong");
-                    res.redirect("back");
-                } else {
-                    project.images.push(newlyCreated);
-                    project.save();
-                    req.flash("success", "Succesfully added image");
-                    res.redirect("back");
-                }
+    try {
+        fs.readFile(req.file.path, function(err, buffer) {
+            if (err) throw err;
+            lwip.open(buffer, req.file.originalname.split('.').pop(), function(err, image) {
+                if (err) throw err;
+                var scaleRatio = image.width() >= image.height() ? MAX_WIDHT / image.width() : MAX_HEIGHT / image.height();
+                scaleRatio = scaleRatio > 1 ? 1 : scaleRatio; // Do not scale image bigger than it already is
+                image.scale(scaleRatio, function(err, resizedImage) {
+                    if (err) throw err;
+                    image.toBuffer('jpg', function(err, buffer){
+                        if (err) throw err;
+                        var name = req.file.originalname;
+                        var imageData = {
+                            data: buffer,
+                            contentType: req.file.mimetype,
+                        }  
+                        var author = {
+                            id: req.user._id,
+                            username: req.user.username
+                        }
+                        var newimage = {name: name, imageData: imageData, author: author};
+                        Image.create(newimage, function(err, newlyCreated){
+                            if (err) throw err;
+                            Project.findById(req.params.id, function(err, project) {
+                                if (err) throw err;
+                                project.images.push(newlyCreated);
+                                project.save();
+                                fs.unlinkSync(req.file.path); // Remove the temporary saved image
+                                req.flash("success", "Succesfully added image");
+                                res.redirect("back");
+                            });
+                        });
+                    });
+                });
             });
-        }
-    });
+        });
+    } catch (e) {
+        console.log(e);
+        req.flash("error", "Something went wrong");
+        return res.redirect("back");
+    }
 });
 
 module.exports = router;
