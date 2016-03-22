@@ -19,7 +19,8 @@ var projectRoutes   = require("./routes/projects"),
     
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
-mongoose.connect("mongodb://localhost/image_gallery");
+//mongoose.connect("mongodb://localhost/image_gallery");
+mongoose.connect("mongodb://juhe:juhefin@ds021989.mlab.com:21989/image-gallery");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(flash());
