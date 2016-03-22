@@ -12,7 +12,7 @@ var MAX_WIDHT = 1024;
 var MAX_HEIGHT = 768;
 
 // Index - Show all projects
-router.get("/", function(req, res) {
+router.get("/", middleware.isLoggedIn, function(req, res) {
     req.user
     Project.find({}, function(err, projects){
         if(err){
@@ -53,7 +53,7 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
 });
 
 // Show more info about one item
-router.get("/:id", function(req, res){
+router.get("/:id", middleware.isLoggedIn, function(req, res){
     Project.findById(req.params.id).populate("images").populate("comments").exec(function(err, foundProject){
         if(err){
             console.log(err);
