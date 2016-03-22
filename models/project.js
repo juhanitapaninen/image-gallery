@@ -4,6 +4,7 @@ var projectSchema = new mongoose.Schema({
     name: String,
     image: String,
     description: String,
+    date : { type : Date, default: Date.now },
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId, 
@@ -15,12 +16,6 @@ var projectSchema = new mongoose.Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Image"
-        }
-    ],
-    comments: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Comment"
         }
     ]
 });

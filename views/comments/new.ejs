@@ -4,7 +4,7 @@
     <div class="row">
         <h1 class="custom-header-style">Add New Comment to <%= image.name %></h1>
         <div class="custom-form-style">
-            <form action="/images/<%= image._id %>/comments" method="POST">
+            <form action="/projects/<%= project_id %>/images/<%= image._id %>/comments" method="POST">
                 <div class="form-group">
                     <input class="form-control" type="text" name="comment[text]" placeholder="text">
                 </div>

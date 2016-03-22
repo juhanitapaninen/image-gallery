@@ -137,4 +137,10 @@ router.post("/:id/file-upload", middleware.isLoggedIn, upload.single('file'), fu
     }
 });
 
+// Destroy project route
+router.delete("/:id", middleware.checkProjectOwnership, function(req, res){
+    req.flash("error", "Project cannot yet be deleted. Feature coming soon!");
+    res.redirect("/projects/" + req.params.id);
+});
+
 module.exports = router;

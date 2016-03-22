@@ -48,7 +48,7 @@ app.use(function(req, res, next){
 app.use("/", indexRoutes);
 app.use("/projects", projectRoutes);
 app.use("/projects/:id/images", imageRoutes);
-app.use("/images/:id/comments", commentRoutes);
+app.use("/projects/:id/images/:image_id/comments", commentRoutes);
 
 app.listen(process.env.PORT, process.env.IP, function(){
    console.log("The server has started!"); 
